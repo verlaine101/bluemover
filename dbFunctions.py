@@ -47,12 +47,20 @@ class dbFunctions(object):
 			return a.fetchone()
 		con[0].close()
 
+	def getDevice(self):
+		con=self.cursor()
+		query="SELECT * FROM device WHERE active = 1'"
+		a=con[1].execute(query)
+		return a.fetchone()
+		con[0].close
+
 	def getEpisode(self,name):
 		con=self.cursor()
 		query="SELECT name FROM episode WHERE name ='"+name+"'"
 		a=con[1].execute(query)
 		return a.fetchone()
 		con[0].close
+
 
 	def inDb(self,name):
 		if self.getEpisode(name):

@@ -2,7 +2,7 @@ import feedFunctions,dbFunctions,os
 #make new objects
 db = dbFunctions.dbFunctions()
 pod = feedFunctions.feedFunctions()
-deviceID='00:1F:00:B6:21:C0'
+
 #first get feeds from db
 feedList=[]
 feeds=db.get('feed')
@@ -39,8 +39,10 @@ if downloads:
 downloads=db.getTransferList()
 	#if there are items in the queue and the bluetooth device is present attempt to transfer
 if downloads:
+	#get device details mac device id and download path
 	for download in downloads:
-		print 'obexftp -b '+deviceID+' -c E:/Podcasts/ -p '+download[1]
+		device=db.getDevice()
+		print 'obexftp -b '+device[2]+' -c '+device[3]+' -p '+download[1]
 		if os.system('obexftp -b '+deviceID+' -c E:/Podcasts/ -p '+download[1]) == 0:
 			db.setTransfered(download[0])
 

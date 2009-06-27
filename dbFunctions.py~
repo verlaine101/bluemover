@@ -25,9 +25,9 @@ class dbFunctions(object):
 		a=con[1].execute('INSERT INTO feed VALUES (null,?,?,?,"x",1)' , (name,path,url))
 		con[0].commit()	
 	
-	def addEpisode(self,feed,file):
+	def addEpisode(self,feed,file,episodeUrl):
 		con=self.cursor()
-		a=con[1].execute('INSERT INTO episode VALUES (null,?,?,0,0)' , (feed,file))
+		a=con[1].execute('INSERT INTO episode VALUES (null,?,?,1,1,?)' , (feed,file,episodeUrl))
 		con[0].commit()	
 		
 	def toggleActive(self,table,ep_id,active):
@@ -42,15 +42,18 @@ class dbFunctions(object):
 			a=con[1].execute('SELECT * FROM '+table)
 			return a
 		else:
-			query=table+" id = "+str(indno)
+			query=table+" WHERE id = "+str(idno)
 			a=con[1].execute('SELECT * FROM '+query)
 			return a.fetchone()
 		con[0].close()
+
 	def getEpisode(self,name):
 		con=self.cursor()
 		query="SELECT name FROM episode WHERE name ='"+name+"'"
 		a=con[1].execute(query)
 		return a.fetchone()
+		con[0].close
+
 	def inDb(self,name):
 		if self.getEpisode(name):
 			print "in db"
@@ -58,16 +61,46 @@ class dbFunctions(object):
 		else:
 			print "not in db"
 			return False
+
+	def getDownloadList(self):
+			downloadList=[]
+			con=self.cursor()
+			a=con[1].execute('SELECT * FROM episode WHERE download = 1')
+			for episode in a:
+				feed=self.get('feed',episode[1])
+				feedPath=feed[2]+episode[2]
+				print feedPath
+				downloadList.append([episode[0],episode[5],feedPath])
+			return downloadList
+			con[0].close
+
+
+
 	def getTransferList(self):
 		transferList=[]
+		episode=[]
 		con=self.cursor()
 		a=con[1].execute('SELECT id,feed,name FROM episode WHERE transfer = 1')
+		
 		for episode in a:
-			feed=self.get('feed',a[1])
-			trasferlist.append([a[0],feed[1]+'/'+a[2]])
+			feed=self.get('feed',episode[1])
+			transferList.append([episode[0],feed[2]+episode[2]])
 		return transferList
+		con[0].close
 
+	def setDownloaded(self,ep_id):
+		ep_id=str(ep_id)
+		con=self.cursor()
+		a=con[0].execute('UPDATE episode SET download=0 WHERE id='+ep_id)
+		con[0].commit()
+		con[0].close()
 
+	def setTransfered(self,ep_id):
+		ep_id=str(ep_id)
+		con=self.cursor()
+		a=con[0].execute('UPDATE episode SET transfer=0 WHERE id='+ep_id)
+		con[0].commit()
+		con[0].close()
 		
 
 		
