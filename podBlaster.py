@@ -43,6 +43,6 @@ if downloads:
 	for download in downloads:
 		device=db.getDevice()
 		print 'obexftp -b '+device[2]+' -c '+device[3]+' -p '+download[1]
-		if os.system('obexftp -b '+deviceID+' -c E:/Podcasts/ -p '+download[1]) == 0:
+		if os.system('obexftp -b '+device[2]+' -c '+device[3]+' -p '+download[1]) == 0:
 			db.setTransfered(download[0])
 

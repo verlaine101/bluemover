@@ -41,7 +41,8 @@ downloads=db.getTransferList()
 if downloads:
 	#get device details mac device id and download path
 	for download in downloads:
-		print 'obexftp -b '+deviceID+' -c E:/Podcasts/ -p '+download[1]
+		device=db.getDevice()
+		print 'obexftp -b '+device[2]+' -c '+device[3]+' -p '+download[1]
 		if os.system('obexftp -b '+deviceID+' -c E:/Podcasts/ -p '+download[1]) == 0:
 			db.setTransfered(download[0])
 
