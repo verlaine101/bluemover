@@ -24,14 +24,15 @@ class feedFunctions(object):
 		if download==False:
 			return url.split('/')[-1]
 		elif urllib.urlretrieve(url, destinationPath):
-			return url.split('/')[-1]	
+			print url,destinationPath
+			return True	
 	
 	def uploadQueue(self,fileList,deviceId):
 		"""takes list of [id,filepath] marks uploaded files inactive"""
 		uploaded=[]
 		for file in filelist:
-			if os.system('obexftp -b '+deviceId+'  -c E:/Music\ Downloads/ -p '+file[1]):
-				uploaded.append[0]
+			if os.system('obexftp -b '+deviceId+'  -c E:/Music\ Downloads/ -p '+file[1]) == 0:
+				uploaded.append(file[0])
 		return uploaded
 
 		
