@@ -15,7 +15,11 @@ class feedFunctions(object):
 		activeFeeds
 
 	def getEnclosure(self,entry):
-		return entry.enclosures[0].href
+		#check if entry has enclosure and return link location
+		try: 
+			return entry.enclosures[0].href
+		except AttributeError:
+			return False
 
 	def getEpisode(self,enclosure):
 		return enclosure.split('/')[-1]	 
